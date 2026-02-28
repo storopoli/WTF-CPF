@@ -393,6 +393,39 @@ button:disabled {
   font-weight: 600;
 }
 
+.result-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.btn-copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.btn-copy:hover {
+  color: var(--text-primary);
+  border-color: var(--border-mid);
+  background: var(--bg-surface);
+}
+
+.btn-copy.copied {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+}
+
 .difference-badge {
   flex-shrink: 0;
   font-family: var(--font-mono);

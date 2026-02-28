@@ -24,6 +24,40 @@ function pluralizeDigit(count: number): string {
   return count === 1 ? "digit" : "digits";
 }
 
+function CopyButton({ text }: { text: string }): JSX.Element {
+  const [copied, setCopied] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function handleCopy(): void {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setCopied(false), 1500);
+    });
+  }
+
+  return (
+    <button
+      type="button"
+      class={`btn-copy${copied ? " copied" : ""}`}
+      onClick={handleCopy}
+      aria-label={copied ? "Copied" : "Copy CPF"}
+      title="Copy to clipboard"
+    >
+      {copied ? (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      ) : (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
 function renderHighlightedCpf(
   formatted: string,
   originalFormatted: string
@@ -341,9 +375,12 @@ export function App(): JSX.Element {
                 return (
                   <li key={resultado.cpfRaw} class="result-row">
                     {renderHighlightedCpf(resultado.cpfFormatado, cpfOriginalFormatado)}
-                    <span class="difference-badge">
-                      {resultado.numDiferencas} {pluralizeDigit(resultado.numDiferencas)}
-                    </span>
+                    <div class="result-actions">
+                      <span class="difference-badge">
+                        {resultado.numDiferencas} {pluralizeDigit(resultado.numDiferencas)}
+                      </span>
+                      <CopyButton text={resultado.cpfFormatado} />
+                    </div>
                   </li>
                 );
               })}
